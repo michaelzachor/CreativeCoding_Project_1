@@ -1,23 +1,70 @@
-OtherCircles group;
+OtherCircles group1;
+OtherCircles group2;
+OtherCircles group3;
+MainCircle circle1;
 
+int circleDim = 50;
 int xLocCirc = 250;
 int yLocCirc = 250;
-int xLocOther = 300;
-int yLocOther = 175;
+int xLocGroup1 = 300;
+int yLocGroup1 = 175;
+int xLocGroup2 = 100;
+int yLocGroup2 = 300;
+int xLocGroup3 = 200;
+int yLocGroup3 = 400;
 int circSpeed = 2;
-color otherFill = color(random(255), random(255), random(255));
+color otherFill1 = color(random(255), random(255), random(255));
+color otherFill2 = color(random(255), random(255), random(255));
+color otherFill3 = color(random(255), random(255), random(255));
+String s = "w = up, s = down, a = left, d = right";
+float w = 1.0;
 
 void setup() {
   size(500, 500);
-  group = new OtherCircles();
+  group1 = new OtherCircles(xLocGroup1, yLocGroup1);
+  group2 = new OtherCircles(xLocGroup2, yLocGroup2);
+  group3 = new OtherCircles(xLocGroup3, yLocGroup3);
+  circle1 = new MainCircle();
 }
 
 void draw() {
-  background(255);
-  strokeWeight(4);
+  println(millis());
+  if (millis() < 15000){
+  background(75);
+  fill(255);
+  text(s, 50, 50);
+  circle1.display(circleDim);
+  group1.display(otherFill1);
+  group2.display(otherFill2);
+  group3.display(otherFill3);
+}
+else {
+  xLocCirc = width/2;
+  yLocCirc = height/2;
+  boolean circleGrows = true;
+  background(75);
+  circle1.display(circleDim);
+  if (circleDim == 300) {
+    circleGrows = !circleGrows;
+    strokeWeight(4);
+  point(width/2 - 75, height/2 - 60);
+  point(width/2 + 75, height/2 - 60);
+  line(width/2 - 75, height/2 + 60, width/2 + 75, height/2 + 60);
+  }
+  if (circleGrows) {
+    circleDim+=5;
+  }
+}
+}
+
+class MainCircle {
+  MainCircle(){
+  }
+  void display(int circleSize){
+    strokeWeight(4);
   stroke(0);
   fill(255);
-  ellipse(xLocCirc, yLocCirc, 50, 50);
+  ellipse(xLocCirc, yLocCirc, circleSize, circleSize);
   if (keyPressed) {
     if (key == 'w' || key == 'W') {
       yLocCirc = yLocCirc - circSpeed;
@@ -44,44 +91,48 @@ void draw() {
   else if (xLocCirc < -50){
     xLocCirc = width+50;
   }
-  group.display();
-  if (((xLocCirc > xLocOther - 55) && (xLocCirc < xLocOther + 150)) && (yLocCirc > yLocOther-110) && (yLocCirc < yLocOther + 50)) {
-    xLocOther = xLocOther + 50;
-  }
-  else if (((xLocCirc < xLocOther + 205) && (xLocCirc > xLocOther)) && (yLocCirc > yLocOther-110) && (yLocCirc < yLocOther + 50)) {
-    xLocOther = xLocOther - 50;
-  }
-  else if (((yLocCirc > yLocOther - 150) && (yLocCirc < yLocOther + 55)) && (xLocCirc > xLocOther-55) && (xLocCirc < xLocOther + 150)) {
-    yLocOther = yLocOther - 50;
-  }
-  else if (((yLocCirc < yLocOther) && (yLocCirc > yLocOther - 160)) && (xLocCirc > xLocOther-55) && (xLocCirc < xLocOther + 150)) {
-    yLocOther = yLocOther + 50;
-  }
-  if (xLocOther > width){
-    xLocOther = 0;
-  }
-  else if (xLocOther < -150){
-    xLocOther = width-150;
-  }
-  if (yLocOther < 0){
-    yLocOther = height;
-  }
-  else if (yLocOther > height + 100){
-    yLocOther = 100;
   }
 }
 
 class OtherCircles {
-  OtherCircles(){
+  int x;
+  int y;
+  OtherCircles(int xOther, int yOther){
+  x = xOther;
+  y = yOther;
   }
-  void display(){
+  void display(color otherCirclesFill){
   int i;
   int j;
-  for (i = xLocOther; i<xLocOther + 151; i+=50) {
-    for (j = yLocOther; j>yLocOther - 151; j-=55) {
-      fill(otherFill);
+  for (i = x; i<x + 151; i+=50) {
+    for (j = y; j>y - 151; j-=55) {
+      fill(otherCirclesFill);
       ellipse(i + random(-1, 1), j + random(-1, 1), 50, 50);
     }
+  }
+  if (((xLocCirc > x - 75) && (xLocCirc < x + 150)) && (yLocCirc > y-150) && (yLocCirc < y + 50)) {
+    x = x + 50;
+  }
+  else if (((xLocCirc < x + 220) && (xLocCirc > x)) && (yLocCirc > y-150) && (yLocCirc < y + 50)) {
+    x = x - 50;
+  }
+  else if (((yLocCirc > y - 120) && (yLocCirc < y + 75)) && (xLocCirc > x-55) && (xLocCirc < x + 150)) {
+    y = y - 50;
+  }
+  else if (((yLocCirc < y) && (yLocCirc > y - 175)) && (xLocCirc > x-55) && (xLocCirc < x + 150)) {
+    y = y + 50;
+  }
+  if (x > width){
+    x = 0;
+  }
+  else if (x < -150){
+    x = width-150;
+  }
+  if (y < 0){
+    y = height;
+  }
+  else if (y > height + 100){
+    y = 100;
   }
   }
 }
